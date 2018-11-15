@@ -1,9 +1,9 @@
 import jwtDecode from 'jwt-decode';
-import {SubmissionError} from 'redux-form';
+import { SubmissionError } from 'redux-form';
 
-import {API_BASE_URL} from '../config';
-import {normalizeResponseErrors} from './utils';
-import {saveAuthToken, clearAuthToken} from '../local-storage';
+import { API_BASE_URL } from '../config';
+import { normalizeResponseErrors } from './utils';
+//import {saveAuthToken, clearAuthToken} from '../local-storage';
 
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN';
 export const setAuthToken = authToken => ({
@@ -39,7 +39,7 @@ const storeAuthInfo = (authToken, dispatch) => {
     const decodedToken = jwtDecode(authToken);
     dispatch(setAuthToken(authToken));
     dispatch(authSuccess(decodedToken.user));
-    saveAuthToken(authToken);
+    //saveAuthToken(authToken);
 };
 
 export const login = (username, password) => dispatch => {
@@ -59,9 +59,9 @@ export const login = (username, password) => dispatch => {
             // errors which follow a consistent format
             .then(res => normalizeResponseErrors(res))
             .then(res => res.json())
-            .then(({authToken}) => storeAuthInfo(authToken, dispatch))
+            .then(({ authToken }) => storeAuthInfo(authToken, dispatch))
             .catch(err => {
-                const {code} = err;
+                const { code } = err;
                 const message =
                     code === 401
                         ? 'Incorrect username or password'
@@ -90,13 +90,13 @@ export const refreshAuthToken = () => (dispatch, getState) => {
     })
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
-        .then(({authToken}) => storeAuthInfo(authToken, dispatch))
+        .then(({ authToken }) => storeAuthInfo(authToken, dispatch))
         .catch(err => {
             // We couldn't get a refresh token because our current credentials
             // are invalid or expired, or something else went wrong, so clear
             // them and sign us out
             dispatch(authError(err));
             dispatch(clearAuth());
-            clearAuthToken(authToken);
+            // clearAuthToken(authToken);
         });
 };
