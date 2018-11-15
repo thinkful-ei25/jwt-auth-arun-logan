@@ -1,18 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { clearAuth, logoutWarning } from '../actions/auth';
+import { clearAuth } from '../actions/auth';
 // import {clearAuthToken} from '../local-storage';
 
 export class HeaderBar extends React.Component {
     logOut() {
         this.props.dispatch(clearAuth());
         // clearAuthToken();
-    }
-
-    clearWarningDialog() {
-        // Hide the dialog
-        this.props.dispatch(logoutWarning(false));
-        // Restart inactivty timer and dialog timer
     }
 
     render() {
@@ -29,7 +23,7 @@ export class HeaderBar extends React.Component {
             warningDialog = (
                 <div className="warning-dialog">
                     <p>You are about to be logged out</p>
-                    <button onClick={() => this.clearWarningDialog()}>Keep me logged in</button>
+                    <button type="button">Keep me logged in</button>
                 </div>
             );
         }
