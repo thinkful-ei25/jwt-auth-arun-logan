@@ -6,7 +6,7 @@ import HeaderBar from './header-bar';
 import LandingPage from './landing-page';
 import Dashboard from './dashboard';
 import RegistrationPage from './registration-page';
-import {refreshAuthToken, clearAuth} from '../actions/auth';
+import {clearAuth, logoutWarning, refreshAuthToken} from '../actions/auth';
 
 export class App extends React.Component {
     componentDidUpdate(prevProps) {
@@ -28,6 +28,10 @@ export class App extends React.Component {
         this.logoutInterval = setInterval(
             () => this.props.dispatch(clearAuth()),
             5 * 60 * 1000 // Five minutes
+        );
+        this.dialogInterval = setInterval(
+            () => this.props.dispatch(logoutWarning(true)), 
+            0.25 * 60 * 1000 // four minutes
         );
     }
 

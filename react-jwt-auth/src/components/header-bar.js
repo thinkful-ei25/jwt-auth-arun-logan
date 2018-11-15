@@ -1,12 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { clearAuth } from '../actions/auth';
+import { clearAuth, logoutWarning } from '../actions/auth';
 // import {clearAuthToken} from '../local-storage';
 
 export class HeaderBar extends React.Component {
     logOut() {
         this.props.dispatch(clearAuth());
         // clearAuthToken();
+    }
+
+    clearWarningDialog() {
+        // Hide the dialog
+        this.props.dispatch(logoutWarning(false));
+        // Cancel and start again our warning timer
+        // Restart inactivty timer
     }
 
     render() {
@@ -17,17 +24,30 @@ export class HeaderBar extends React.Component {
                 <button onClick={() => this.logOut()}>Log out</button>
             );
         }
+
+        let warningDialog;
+        if (this.props.showWarning) {
+            warningDialog = (
+                <div className="warning-dialog">
+                    <p>You are about to be logged out</p>
+                    <button onClick={() => this.clearWarningDialog()}>Keep me logged in</button>
+                </div>
+            );
+        }
+
         return (
             <div className="header-bar">
                 <h1>Foo App</h1>
                 {logOutButton}
+                {warningDialog}
             </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    loggedIn: state.auth.currentUser !== null
+    loggedIn: state.auth.currentUser !== null,
+    showWarning: state.auth.showLogoutWarning,
 });
 
 export default connect(mapStateToProps)(HeaderBar);
