@@ -6,7 +6,7 @@ import HeaderBar from './header-bar';
 import LandingPage from './landing-page';
 import Dashboard from './dashboard';
 import RegistrationPage from './registration-page';
-import {clearAuth, logoutWarning, refreshAuthToken, restartAutoLogout, startAutoLogout} from '../actions/auth';
+import {clearAuth, logoutWarning, refreshAuthToken, restartAutoLogout} from '../actions/auth';
 
 export class App extends React.Component {
     componentDidUpdate(prevProps) {

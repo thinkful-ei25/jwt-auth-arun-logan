@@ -6,13 +6,7 @@ import {
     AUTH_ERROR,
     LOGOUT_WARNING,
     RESTART_AUTO_LOGOUT,
-
-    clearAuth,
-    logoutWarning,
 } from '../actions/auth';
-
-const DIALOG_TIME = 0.25 * 60 * 1000;
-const LOGOUT_TIME = 0.45 * 60 * 1000;
 
 const initialState = {
     authToken: null, // authToken !== null does not mean it has been validated
