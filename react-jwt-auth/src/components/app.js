@@ -6,13 +6,14 @@ import HeaderBar from './header-bar';
 import LandingPage from './landing-page';
 import Dashboard from './dashboard';
 import RegistrationPage from './registration-page';
-import {refreshAuthToken} from '../actions/auth';
+import {refreshAuthToken, clearAuth} from '../actions/auth';
 
 export class App extends React.Component {
     componentDidUpdate(prevProps) {
         if (!prevProps.loggedIn && this.props.loggedIn) {
             // When we are logged in, refresh the auth token periodically
             this.startPeriodicRefresh();
+            this.startAutoLogout();
         } else if (prevProps.loggedIn && !this.props.loggedIn) {
             // Stop refreshing when we log out
             this.stopPeriodicRefresh();
@@ -21,6 +22,13 @@ export class App extends React.Component {
 
     componentWillUnmount() {
         this.stopPeriodicRefresh();
+    }
+
+    startAutoLogout() {
+        this.logoutInterval = setInterval(
+            () => this.props.dispatch(clearAuth()),
+            5 * 60 * 1000 // Five minutes
+        );
     }
 
     startPeriodicRefresh() {
