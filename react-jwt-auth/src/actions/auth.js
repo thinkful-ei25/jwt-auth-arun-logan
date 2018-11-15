@@ -39,6 +39,13 @@ export const logoutWarning = (showWarning) => ({
     showWarning
 });
 
+export const RESTART_AUTO_LOGOUT = 'RESTART_AUTO_LOGOUT';
+export const restartAutoLogout = (logoutTimer, dialogTimer) => ({
+    type: RESTART_AUTO_LOGOUT,
+    logoutTimer,
+    dialogTimer,
+});
+
 // Stores the auth token in state and localStorage, and decodes and stores
 // the user data stored in the token
 const storeAuthInfo = (authToken, dispatch) => {

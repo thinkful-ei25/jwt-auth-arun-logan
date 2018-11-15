@@ -12,8 +12,7 @@ export class HeaderBar extends React.Component {
     clearWarningDialog() {
         // Hide the dialog
         this.props.dispatch(logoutWarning(false));
-        // Cancel and start again our warning timer
-        // Restart inactivty timer
+        // Restart inactivty timer and dialog timer
     }
 
     render() {

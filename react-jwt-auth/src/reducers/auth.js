@@ -5,7 +5,14 @@ import {
     AUTH_SUCCESS,
     AUTH_ERROR,
     LOGOUT_WARNING,
+    RESTART_AUTO_LOGOUT,
+
+    clearAuth,
+    logoutWarning,
 } from '../actions/auth';
+
+const DIALOG_TIME = 0.25 * 60 * 1000;
+const LOGOUT_TIME = 0.45 * 60 * 1000;
 
 const initialState = {
     authToken: null, // authToken !== null does not mean it has been validated
@@ -13,6 +20,8 @@ const initialState = {
     loading: false,
     error: null,
     showLogoutWarning: false,
+    logoutTimer: null,
+    dialogTimer: null,
 };
 
 export default function reducer(state = initialState, action) {
@@ -21,9 +30,12 @@ export default function reducer(state = initialState, action) {
             authToken: action.authToken
         });
     } else if (action.type === CLEAR_AUTH) {
+        clearTimeout(state.logoutTimer);
+        clearTimeout(state.dialogTimer);
         return Object.assign({}, state, {
             authToken: null,
-            currentUser: null
+            currentUser: null,
+            showLogoutWarning: false,
         });
     } else if (action.type === AUTH_REQUEST) {
         return Object.assign({}, state, {
@@ -44,6 +56,15 @@ export default function reducer(state = initialState, action) {
         return {
             ...state,
             showLogoutWarning: action.showWarning,
+        };
+    } else if (action.type === RESTART_AUTO_LOGOUT) {
+        clearTimeout(state.logoutTimer);
+        clearTimeout(state.dialogTimer);
+        return {
+            ...state,
+            showLogoutWarning: false,
+            logoutTimer: action.logoutTimer,
+            dialogTimer: action.dialogTimer,
         };
     }
     return state;

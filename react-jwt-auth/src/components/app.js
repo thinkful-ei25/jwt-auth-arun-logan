@@ -6,33 +6,30 @@ import HeaderBar from './header-bar';
 import LandingPage from './landing-page';
 import Dashboard from './dashboard';
 import RegistrationPage from './registration-page';
-import {clearAuth, logoutWarning, refreshAuthToken} from '../actions/auth';
+import {clearAuth, logoutWarning, refreshAuthToken, restartAutoLogout, startAutoLogout} from '../actions/auth';
 
 export class App extends React.Component {
     componentDidUpdate(prevProps) {
         if (!prevProps.loggedIn && this.props.loggedIn) {
             // When we are logged in, refresh the auth token periodically
             this.startPeriodicRefresh();
-            this.startAutoLogout();
+            // this.startAutoLogout();
+            this.restartAutoLogout();
         } else if (prevProps.loggedIn && !this.props.loggedIn) {
             // Stop refreshing when we log out
             this.stopPeriodicRefresh();
         }
     }
 
-    componentWillUnmount() {
-        this.stopPeriodicRefresh();
+    restartAutoLogout() {
+        this.props.dispatch(restartAutoLogout(
+            setTimeout(() => this.props.dispatch(clearAuth()), 0.5 * 60 * 1000),
+            setTimeout(() => this.props.dispatch(logoutWarning(true)), 0.25 * 60 * 1000)
+        ));
     }
 
-    startAutoLogout() {
-        this.logoutInterval = setInterval(
-            () => this.props.dispatch(clearAuth()),
-            5 * 60 * 1000 // Five minutes
-        );
-        this.dialogInterval = setInterval(
-            () => this.props.dispatch(logoutWarning(true)), 
-            0.25 * 60 * 1000 // four minutes
-        );
+    componentWillUnmount() {
+        this.stopPeriodicRefresh();
     }
 
     startPeriodicRefresh() {
@@ -52,7 +49,7 @@ export class App extends React.Component {
 
     render() {
         return (
-            <div className="app">
+            <div className="app" onClick={() => this.restartAutoLogout()}>
                 <HeaderBar />
                 <Route exact path="/" component={LandingPage} />
                 <Route exact path="/dashboard" component={Dashboard} />
@@ -64,7 +61,7 @@ export class App extends React.Component {
 
 const mapStateToProps = state => ({
     hasAuthToken: state.auth.authToken !== null,
-    loggedIn: state.auth.currentUser !== null
+    loggedIn: state.auth.currentUser !== null,
 });
 
 // Deal with update blocking - https://reacttraining.com/react-router/web/guides/dealing-with-update-blocking
